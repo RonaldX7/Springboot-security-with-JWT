@@ -17,11 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 public class PrincipalController {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping("/hello")
     public String hello(){
@@ -31,31 +27,5 @@ public class PrincipalController {
     @GetMapping("/helloSecured")
     public String helloSecured(){
         return "Hello World secured";
-    }
-
-    @PostMapping("/createUser")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO createUserDTO) {
-
-        Set<RoleEntity> roles = createUserDTO.roles().stream()
-                .map(role -> RoleEntity.builder()
-                        .name(ERole.valueOf(role))
-                        .build())
-                .collect(Collectors.toSet());
-
-        UserEntity userEntity = UserEntity.builder()
-                .username(createUserDTO.username())
-                .password(passwordEncoder.encode(createUserDTO.password()))
-                .email(createUserDTO.email())
-                .roles(roles)
-                .build();
-
-        userRepository.save(userEntity);
-        return ResponseEntity.ok(userEntity);
-    }
-
-    @DeleteMapping("/deleteUser")
-    public String deleteUser(@RequestParam String id) {
-        userRepository.deleteById(Long.parseLong(id));
-        return "Se ha borrado el user con id".concat(id);
     }
 }

@@ -9,16 +9,28 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("denyAll()")
 public class PrincipalController {
 
-
-    @GetMapping("/hello")
-    @PreAuthorize("permitAll()")
-    public String hello(){
-        return "Hello World not secured";
+    @GetMapping("/get")
+    public String helloGet() {
+        return "Hello World - GET";
     }
 
-    @GetMapping("/helloSecured")
-    @PreAuthorize("hasAuthority('CREATE')")
-    public String helloSecured(){
-        return "Hello World secured";
+    @PostMapping("/post")
+    public String helloPost() {
+        return "Hello World - POST";
+    }
+
+    @PutMapping("/put")
+    public String helloPut() {
+        return "Hello World - PUT";
+    }
+
+    @DeleteMapping("/delete")
+    public String helloDelete() {
+        return "Hello World - DELETE";
+    }
+
+    @PatchMapping("/patch")
+    public String helloPatch() {
+        return "Hello World - PATCH";
     }
 }

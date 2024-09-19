@@ -1,5 +1,6 @@
 package com.ronald.springSecurityJWT.security;
 
+import com.ronald.springSecurityJWT.services.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,32 +66,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(UserDetailServiceImpl userDetailsService) throws Exception {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(userDetailsService);
         return provider;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        List<UserDetails> userDetails = new ArrayList<>();
-        userDetails.add(
-                User.withUsername("ronald")
-                .password("1234")
-                .roles("ADMIN")
-                .authorities("READ", "CREATE")
-                .build());
 
-        userDetails.add(
-                User.withUsername("jair")
-                        .password("1234")
-                        .roles("USER")
-                        .authorities("READ")
-                        .build());
-
-        return new InMemoryUserDetailsManager(userDetails);
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

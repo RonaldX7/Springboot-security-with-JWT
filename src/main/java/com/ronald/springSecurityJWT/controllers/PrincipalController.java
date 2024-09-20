@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 public class PrincipalController {
 
     @GetMapping("/get")
-    @PreAuthorize("hasAuthority('READ')")
     public String helloGet() {
         return "Hello World - GET";
     }
@@ -31,7 +30,6 @@ public class PrincipalController {
     }
 
     @PatchMapping("/patch")
-    @PreAuthorize("hasAuthority('REFACTOR')")
     public String helloPatch() {
         return "Hello World - PATCH";
     }

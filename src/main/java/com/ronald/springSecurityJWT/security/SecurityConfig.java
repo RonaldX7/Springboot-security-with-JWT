@@ -32,33 +32,34 @@ import java.util.List;
 public class SecurityConfig {
 
 
-//    @Bean
-//    public SecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        return httpSecurity
-//                .csrf(csrfConfigurer -> csrfConfigurer.disable())
-//                .httpBasic(Customizer.withDefaults())
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(http -> {
-//                    //configurar los endpoints publicos
-//                    http.requestMatchers(HttpMethod.GET, "/auth/hello").permitAll();
-//
-//                    //configurar los endpoints privados
-//                    http.requestMatchers(HttpMethod.GET, "/auth/helloSecured").hasAuthority("CREATE");
-//
-//                    //configurar el resto de endpoints - NO ESPECIFICADOS
-//                    http.anyRequest().denyAll();
-//                })
-//                .build();
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrfConfigurer -> csrfConfigurer.disable())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(http -> {
+                    //configurar los endpoints publicos
+                    http.requestMatchers(HttpMethod.GET, "/auth/get").permitAll();
+
+                    //configurar los endpoints privados
+                    http.requestMatchers(HttpMethod.POST, "/auth/post").hasAnyAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.DELETE, "/auth/delete").hasAuthority("DELETE");
+
+                    //configurar el resto de endpoints - NO ESPECIFICADOS
+                    http.anyRequest().denyAll();
+                })
                 .build();
     }
+
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        return httpSecurity
+//                .csrf(csrfConfigurer -> csrfConfigurer.disable())
+//                .httpBasic(Customizer.withDefaults())
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .build();
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -77,8 +78,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
-
 
 }

@@ -19,14 +19,17 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collection;
 
+
 public class JwtTokenValidator extends OncePerRequestFilter {
 
     private JwtUtils jwtUtils;
 
+    //Contructor de mi clase jwtUtils
     public JwtTokenValidator(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
     }
 
+    //Este método(filtro) se va ejecutar por cada petición
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request,
                                     @NotNull HttpServletResponse response,
@@ -35,7 +38,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (token != null){
-            token = token.substring(7);
+            token = token.substring(7); //Extrae el string a partir de la posición 7
             DecodedJWT decodedJWT = jwtUtils.validateToken(token);
 
             String username = jwtUtils.extractUsername(decodedJWT);

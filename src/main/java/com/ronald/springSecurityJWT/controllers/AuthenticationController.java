@@ -1,5 +1,6 @@
 package com.ronald.springSecurityJWT.controllers;
 
+import com.ronald.springSecurityJWT.controllers.dtos.AuthCreateUserRequest;
 import com.ronald.springSecurityJWT.controllers.dtos.AuthLoginRequest;
 import com.ronald.springSecurityJWT.controllers.dtos.AuthResponse;
 import com.ronald.springSecurityJWT.services.UserDetailServiceImpl;
@@ -18,6 +19,11 @@ public class AuthenticationController {
 
     @Autowired
     private UserDetailServiceImpl userDetailService;
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<AuthResponse> register(@RequestBody @Valid AuthCreateUserRequest authCreateUser) {
+        return new ResponseEntity<>(this.userDetailService.createUser(authCreateUser), HttpStatus.CREATED);
+    }
 
     @PostMapping("/log-in")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthLoginRequest userRequest) {

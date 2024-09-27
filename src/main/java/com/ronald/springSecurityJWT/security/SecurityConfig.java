@@ -30,18 +30,17 @@ public class SecurityConfig {
     private JwtUtils jwtUtils;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationProvider authenticationProvider) throws Exception {
         return httpSecurity
                 .csrf(csrfConfigurer -> csrfConfigurer.disable())
-                .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                     //configurar los endpoints publicos
                     http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
 
                     //configurar los endpoints privados
-                    http.requestMatchers(HttpMethod.POST, "/auth/post").hasAnyAuthority("ADMIN", "USER");
-                    http.requestMatchers(HttpMethod.DELETE, "/auth/delete").hasAuthority("ADMIN");
+                    http.requestMatchers(HttpMethod.GET, "/method/get").hasAnyAuthority("ADMIN", "USER");
+                    http.requestMatchers(HttpMethod.DELETE, "/method/delete").hasAuthority("ADMIN");
 
                     //configurar el resto de endpoints - NO ESPECIFICADOS
                     http.anyRequest().denyAll();
@@ -67,5 +66,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

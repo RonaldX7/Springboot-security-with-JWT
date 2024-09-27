@@ -45,7 +45,6 @@ public class SpringSecurityJwtApplication {
 					.build();
 
 			//Creacion de roles
-
 			RoleEntity roleAdmin = RoleEntity.builder()
 					.roleEnum(RoleEnum.ADMIN)
 					.permissionList(Set.of(createPermission, readPermission, updatePermission, deletePermission))
@@ -64,7 +63,7 @@ public class SpringSecurityJwtApplication {
 			//creacion de usuarios
 			UserEntity userRonald = UserEntity.builder()
 					.username("ronald")
-					.password("$2a$10$qXbvbwRHFEkIl.OcuEIO.egiLXjgtUKbVzGE248.aoArOCkMevzVy")
+					.password("$2a$10$PqMKwvJBh5KeT0O4NA8le.PEZyNOq86EoqvXshTePE9ObP3vYmTVK")
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
@@ -74,7 +73,7 @@ public class SpringSecurityJwtApplication {
 
 			UserEntity userDiego = UserEntity.builder()
 					.username("diego")
-					.password("$2a$10$qXbvbwRHFEkIl.OcuEIO.egiLXjgtUKbVzGE248.aoArOCkMevzVy")
+					.password("$2a$10$PqMKwvJBh5KeT0O4NA8le.PEZyNOq86EoqvXshTePE9ObP3vYmTVK")
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
@@ -84,7 +83,7 @@ public class SpringSecurityJwtApplication {
 
 			UserEntity userNicolas = UserEntity.builder()
 					.username("nicolas")
-					.password("$2a$10$qXbvbwRHFEkIl.OcuEIO.egiLXjgtUKbVzGE248.aoArOCkMevzVy")
+					.password("$2a$10$PqMKwvJBh5KeT0O4NA8le.PEZyNOq86EoqvXshTePE9ObP3vYmTVK")
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)

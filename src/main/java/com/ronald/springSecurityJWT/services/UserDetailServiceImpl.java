@@ -120,6 +120,21 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         UserEntity userCreated = userRepository.save(userEntity);
 
-        return null;
+        ArrayList<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+
+        userCreated.getRoles()
+                .forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
+
+        userCreated.getRoles()
+                .stream()
+                .flatMap(role -> role.getPermissionList().stream())
+                .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getName())));
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userCreated.getUsername(), userCreated.getPassword(), authorityList);
+
+        String accessToken = jwtUtils.createToken(authentication);
+
+        AuthResponse authResponse = new AuthResponse(userCreated.getUsername(), "Usuario creado correctamente", accessToken, true);
+        return authResponse;
     }
 }

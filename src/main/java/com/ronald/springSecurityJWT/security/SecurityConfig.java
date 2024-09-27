@@ -37,11 +37,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                     //configurar los endpoints publicos
-                    http.requestMatchers(HttpMethod.GET, "/auth/get").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
 
                     //configurar los endpoints privados
-                    http.requestMatchers(HttpMethod.POST, "/auth/post").hasAnyAuthority("CREATE");
-                    http.requestMatchers(HttpMethod.DELETE, "/auth/delete").hasAuthority("DELETE");
+                    http.requestMatchers(HttpMethod.POST, "/auth/post").hasAnyAuthority("ADMIN", "USER");
+                    http.requestMatchers(HttpMethod.DELETE, "/auth/delete").hasAuthority("ADMIN");
 
                     //configurar el resto de endpoints - NO ESPECIFICADOS
                     http.anyRequest().denyAll();

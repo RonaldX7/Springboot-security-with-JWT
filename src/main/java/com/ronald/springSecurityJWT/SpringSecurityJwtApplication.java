@@ -64,7 +64,7 @@ public class SpringSecurityJwtApplication {
 			//creacion de usuarios
 			UserEntity userRonald = UserEntity.builder()
 					.username("ronald")
-					.password("123")
+					.password("$2a$10$qXbvbwRHFEkIl.OcuEIO.egiLXjgtUKbVzGE248.aoArOCkMevzVy")
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
@@ -74,7 +74,7 @@ public class SpringSecurityJwtApplication {
 
 			UserEntity userDiego = UserEntity.builder()
 					.username("diego")
-					.password("123")
+					.password("$2a$10$qXbvbwRHFEkIl.OcuEIO.egiLXjgtUKbVzGE248.aoArOCkMevzVy")
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
@@ -84,7 +84,7 @@ public class SpringSecurityJwtApplication {
 
 			UserEntity userNicolas = UserEntity.builder()
 					.username("nicolas")
-					.password("123")
+					.password("$2a$10$qXbvbwRHFEkIl.OcuEIO.egiLXjgtUKbVzGE248.aoArOCkMevzVy")
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,22 +49,22 @@ public class UserDetailServiceImpl implements UserDetailsService {
         UserEntity userEntity = userRepository.findUserEntityByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("El usuario no existe"));
 
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 
         userEntity.getRoles()
-                .forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
+                .forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
 
         userEntity.getRoles().stream()
                 .flatMap(role -> role.getPermissionList().stream())
-                .forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission.getName())));
+                .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getName())));
 
         return new User(userEntity.getUsername(),
                 userEntity.getPassword(),
                 userEntity.isEnabled(),
                 userEntity.isAccountNoExpired(),
-                userEntity.isCredentialsNoExpired(),
+                userEntity.isCredentialNoExpired(),
                 userEntity.isAccountNoLocked(),
-                authorities);
+                authorityList);
     }
 
     //metodo para logearse
@@ -77,7 +78,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         String accessToken = jwtUtils.createToken(authentication);
 
         AuthResponse authResponse = new AuthResponse(username, "Usuario logeado correctamente", accessToken, true);
-
         return authResponse;
     }
 
@@ -91,46 +91,47 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("Contraseña incorrecta");
         }
-        return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
     }
 
     //metodo para crear un usuario
     public AuthResponse createUser(AuthCreateUserRequest authCreateUserRequest) {
         String username = authCreateUserRequest.username();
         String password = authCreateUserRequest.password();
-        List<String> roles = authCreateUserRequest.roleRequest().roleListName();
+        List<String> roleRequest = authCreateUserRequest.roleRequest().roleListName();
 
-        Set<RoleEntity> roleEntitiesSet = roleRepository.findRoleEntitiesByRoleEnumIn(roles)
-                .stream()
-                .collect(Collectors.toSet());
+        Set<RoleEntity> roleEntityList = roleRepository.findRoleEntitiesByRoleEnumIn(roleRequest).stream().collect(Collectors.toSet());
 
-        if (roleEntitiesSet.isEmpty()) {
+        if (roleEntityList.isEmpty()) {
             throw new IllegalArgumentException("Los roles especificados no existen");
         }
 
         UserEntity userEntity = UserEntity.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
-                .roles(roleEntitiesSet)
+                .roles(roleEntityList)
                 .isEnabled(true)
                 .accountNoLocked(true)
                 .accountNoExpired(true)
-                .credentialsNoExpired(true)
+                .credentialNoExpired(true)
                 .build();
 
         UserEntity userCreated = userRepository.save(userEntity);
 
-        ArrayList<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+        ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
+        //Aqui se agregan los roles
         userCreated.getRoles()
-                .forEach(role -> authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
+                .forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_".concat(role.getRoleEnum().name()))));
 
+        //Aqui se agregan los permisos
         userCreated.getRoles()
                 .stream()
                 .flatMap(role -> role.getPermissionList().stream())
-                .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getName())));
+                .forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission.getName())));
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userCreated.getUsername(), userCreated.getPassword(), authorityList);
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userCreated.getUsername(), userCreated.getPassword(), authorities);
 
         String accessToken = jwtUtils.createToken(authentication);
 

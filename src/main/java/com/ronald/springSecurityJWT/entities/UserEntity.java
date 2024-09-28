@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -34,7 +33,7 @@ public class UserEntity {
     private boolean accountNoLocked;
 
     @Column(name = "credentials_No_Expired")
-    private boolean credentialsNoExpired;
+    private boolean credentialNoExpired;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",

@@ -67,7 +67,7 @@ public class SpringSecurityJwtApplication {
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
-					.credentialsNoExpired(true)
+					.credentialNoExpired(true)
 					.roles(Set.of(roleAdmin))
 					.build();
 
@@ -77,7 +77,7 @@ public class SpringSecurityJwtApplication {
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
-					.credentialsNoExpired(true)
+					.credentialNoExpired(true)
 					.roles(Set.of(roleUser))
 					.build();
 
@@ -87,7 +87,7 @@ public class SpringSecurityJwtApplication {
 					.isEnabled(true)
 					.accountNoExpired(true)
 					.accountNoLocked(true)
-					.credentialsNoExpired(true)
+					.credentialNoExpired(true)
 					.roles(Set.of(roleInvited))
 					.build();
 

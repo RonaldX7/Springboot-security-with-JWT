@@ -36,7 +36,7 @@ public class JwtUtils {
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.joining(",")); //READ,WRITE,CREATE,DELETE
 
-            String jwtToken = JWT.create()
+            String token = JWT.create()
                     .withIssuer(this.userGenerator)
                     .withSubject(username)
                     .withClaim("authorities", authorities)
@@ -47,7 +47,7 @@ public class JwtUtils {
                             new Date(System.currentTimeMillis()))
                     .sign(algorithm);
 
-        return jwtToken;
+        return token;
     }
 
     //Metodo para validar el token

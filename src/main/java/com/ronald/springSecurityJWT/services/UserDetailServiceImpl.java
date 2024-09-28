@@ -130,7 +130,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .flatMap(role -> role.getPermissionList().stream())
                 .forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission.getName())));
 
-        SecurityContext context = SecurityContextHolder.getContext();
+        //SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = new UsernamePasswordAuthenticationToken(userCreated.getUsername(), userCreated.getPassword(), authorities);
 
         String accessToken = jwtUtils.createToken(authentication);

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/method")
-@PreAuthorize("denyAll()")
 public class PrincipalController {
 
     @GetMapping("/get")

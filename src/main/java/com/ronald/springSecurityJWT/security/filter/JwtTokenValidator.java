@@ -29,7 +29,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
         this.jwtUtils = jwtUtils;
     }
 
-    //Este método(filtro) se va ejecutar por cada petición
+    //Este metodo(filtro) se va ejecutar por cada petición que se haga al servidor
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
